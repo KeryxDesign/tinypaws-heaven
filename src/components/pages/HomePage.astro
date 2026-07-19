@@ -1,0 +1,212 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import Icon from '../Icon.astro';
+import Photo from '../Photo.astro';
+import CatCard from '../CatCard.astro';
+import InstagramCTA from '../InstagramCTA.astro';
+import { useTranslations, localizedPath, routes, INSTAGRAM_URL, type Locale } from '../../i18n/ui';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const base = import.meta.env.BASE_URL;
+
+const cats = await getCollection('cats');
+const adoptable = cats.filter((c) => c.data.status === 'adoptable').sort((a, b) => a.data.order - b.data.order);
+const adopted = cats.filter((c) => c.data.status === 'adopted');
+const hasKittens = adoptable.length > 0;
+
+// PLACEHOLDER: nome della compagna di Davide (da confermare)
+const PARTNER = '[name]';
+
+const copy = {
+  en: {
+    heroLead: 'We keep finding kittens on the streets of Tirana.',
+    heroSub: 'So we take them home for a while.',
+    heroLine: `We're Davide and ${PARTNER}. Not a shelter, not an association. Two people with a spare room and a soft spot for small cats.`,
+    values: ['Fostered in our home', 'Vaccinated & checked', 'Matched with the right family'],
+    whoTitle: 'What we actually do',
+    whoBody: `Every so often, a kitten needs a place to be safe. We take one in, get it healthy, and look, without rushing, for a family that fits. For a while our couch belongs to a small cat. Then it moves on to its own home, and we wait for the next little face.`,
+    nowTitle: 'Looking for a home right now',
+    nowLine: 'One little one is with us at the moment.',
+    emptyTitle: t('cats.empty.title'),
+    emptyBody: t('cats.empty.body'),
+    happyTitle: 'Some of them already made it',
+    happyBody: 'Every kitten that passed through our home left it for a better one. Cinnamon was found alone by a café, barely 600 grams. Today she is someone’s cat.',
+    quote: 'A kitten that would have grown up on the street gets a warm room instead, and then a family. That’s reason enough for us.',
+    igTitle: 'Most of the day-to-day lives on Instagram',
+    igBody: 'The naps, the first time they use the litter box, the night they finally purr. We post it all there, as it happens.',
+    ctaHeading: 'Come meet a kitten',
+    ctaText: 'The fastest way to reach us is a message on Instagram. Even just to ask a question.',
+  },
+  sq: {
+    heroLead: 'Vazhdojmë të gjejmë kotele në rrugët e Tiranës.',
+    heroSub: 'Kështu i marrim në shtëpi për një kohë.',
+    heroLine: `Jemi Davide dhe ${PARTNER}. As strehë, as shoqatë. Dy njerëz me një dhomë të lirë dhe një dobësi për macet e vogla.`,
+    values: ['Të strehuar në shtëpinë tonë', 'Të vaksinuar dhe të kontrolluar', 'Të përshtatur me familjen e duhur'],
+    whoTitle: 'Çfarë bëjmë në të vërtetë',
+    whoBody: `Herë pas here, një kotele ka nevojë për një vend të sigurt. Marrim një, e bëjmë të shëndetshme dhe kërkojmë, pa nxitim, një familje që i shkon. Për një kohë divani ynë i përket një maceje të vogël. Pastaj ajo shkon në shtëpinë e vet, dhe ne presim fytyrën tjetër të vogël.`,
+    nowTitle: 'Në kërkim të një shtëpie tani',
+    nowLine: 'Një i vogël është me ne për momentin.',
+    emptyTitle: t('cats.empty.title'),
+    emptyBody: t('cats.empty.body'),
+    happyTitle: 'Disa prej tyre ia dolën',
+    happyBody: 'Çdo kotele që kaloi nga shtëpia jonë e la atë për një më të mirë. Cinnamon u gjet vetëm pranë një kafeneje, mezi 600 gramë. Sot është macja e dikujt.',
+    quote: 'Një kotele që do të ishte rritur në rrugë merr në vend të saj një dhomë të ngrohtë, dhe pastaj një familje. Kjo është arsye e mjaftueshme për ne.',
+    igTitle: 'Pjesa më e madhe e ditës jetohet në Instagram',
+    igBody: 'Gjumët, hera e parë në kutinë e rërës, nata kur më në fund gërhasin nga kënaqësia. E postojmë gjithçka atje, ndërsa ndodh.',
+    ctaHeading: 'Eja të njohësh një kotele',
+    ctaText: 'Mënyra më e shpejtë për të na kontaktuar është një mesazh në Instagram. Qoftë edhe vetëm për të pyetur.',
+  },
+}[lang];
+
+const featuredAdopted = adopted[0];
+---
+<Base
+  title={`${t('site.name')} · ${t('site.tagline')}`}
+  description="We're two people in Tirana who foster stray kittens, get them healthy, and help them find a family. Meet the kittens who need a home."
+  lang={lang}
+>
+  <Header lang={lang} page="home" />
+  <main>
+    <!-- HERO — sec A -->
+    <section class="sec sec-a hero">
+      <div class="wrap hero__grid">
+        <div class="hero__text">
+          <h1 class="hero__h reveal">
+            {copy.heroLead}<br /><span class="hero__accent">{copy.heroSub}</span>
+          </h1>
+          <p class="hero__line reveal" data-delay="1">{copy.heroLine}</p>
+          <div class="hero__btns reveal" data-delay="2">
+            <a class="btn btn-primary" href={localizedPath(base, lang, routes.cats)}>
+              <Icon name="paw" class="btn__ico" />{t('cta.meet')}
+            </a>
+            <a class="btn btn-outline" href={localizedPath(base, lang, routes.happy)}>{t('cta.happy')}</a>
+          </div>
+        </div>
+        <div class="hero__media reveal" data-delay="1">
+          <Photo src={hasKittens ? adoptable[0].data.cover : featuredAdopted?.data.cover} alt={t('site.name')} label={t('photo.coming')} />
+        </div>
+      </div>
+      <Icon name="roof" class="roof-divider" />
+    </section>
+
+    <!-- VALUES strip — sec B -->
+    <section class="sec-b values">
+      <div class="wrap values__row">
+        {copy.values.map((v, i) => (
+          <div class="values__item">
+            <span class="values__ico"><Icon name={['heart', 'check', 'paw'][i]} /></span>
+            <span>{v}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- WHO — sec A -->
+    <section class="sec sec-a">
+      <div class="wrap wrap-narrow">
+        <h2 class="section-h">{copy.whoTitle}</h2>
+        <p class="lede">{copy.whoBody}</p>
+      </div>
+    </section>
+
+    <!-- KITTENS NOW — sec C -->
+    <section class="sec sec-c">
+      <div class="wrap">
+        <h2 class="section-h">{hasKittens ? copy.nowTitle : copy.emptyTitle}</h2>
+        {hasKittens ? (
+          <>
+            <p class="lede lede--center">{copy.nowLine}</p>
+            <div class="grid-cats">
+              {adoptable.map((cat) => (
+                <a href={`${localizedPath(base, lang, routes.cats)}#${cat.id}`} class="card-link"><CatCard cat={cat} lang={lang} /></a>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div class="empty">
+            <span class="empty__cat"><Icon name="cat" /></span>
+            <p class="lede">{copy.emptyBody}</p>
+            <a class="btn btn-primary" href={INSTAGRAM_URL} target="_blank" rel="noopener">
+              <Icon name="instagram" class="btn__ico" />{t('cta.follow')}
+            </a>
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- HAPPY teaser — sec A -->
+    <section class="sec sec-a">
+      <div class="wrap wrap-narrow center">
+        <h2 class="section-h">{copy.happyTitle}</h2>
+        <p class="lede">{copy.happyBody}</p>
+        <a class="btn btn-outline" href={localizedPath(base, lang, routes.happy)}>{t('cta.happy')}</a>
+      </div>
+    </section>
+
+    <!-- QUOTE — sec cool -->
+    <section class="sec sec-cool">
+      <div class="wrap wrap-narrow quote">
+        <Icon name="heart" class="quote__heart" />
+        <p class="quote__t">{copy.quote}</p>
+      </div>
+    </section>
+
+    <!-- INSTAGRAM — sec B -->
+    <section class="sec sec-b">
+      <div class="wrap wrap-narrow center">
+        <h2 class="section-h">{copy.igTitle}</h2>
+        <p class="lede">{copy.igBody}</p>
+        <a class="btn btn-outline" href={INSTAGRAM_URL} target="_blank" rel="noopener">
+          <Icon name="instagram" class="btn__ico" />{t('cta.follow')}
+        </a>
+      </div>
+    </section>
+
+    <!-- CTA — sec warm -->
+    <InstagramCTA lang={lang} heading={copy.ctaHeading} text={copy.ctaText} />
+  </main>
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .hero { position: relative; padding-bottom: clamp(3.5rem, 8vw, 6rem); }
+  .hero__grid { display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: center; }
+  .hero__h { font-size: clamp(2.3rem, 6.4vw, 4.1rem); font-weight: 560; }
+  .hero__accent { color: var(--color-apricot); }
+  .hero__line { margin-top: 1.2rem; font-size: 1.16rem; color: var(--color-slate); max-width: 32rem; }
+  .hero__btns { margin-top: 1.7rem; display: flex; flex-wrap: wrap; gap: .8rem; }
+  .hero__media { aspect-ratio: 4/3; border-radius: 24px; overflow: hidden; box-shadow: 0 26px 50px -30px rgba(74,53,38,.55); }
+  .roof-divider { position: absolute; left: 50%; bottom: -14px; transform: translateX(-50%); width: min(60%, 340px); height: 26px; color: var(--color-apricot); }
+
+  .btn__ico { width: 1.15rem; height: 1.15rem; }
+
+  .values__row { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem 2.4rem; }
+  .values__item { display: inline-flex; align-items: center; gap: .6rem; font-family: var(--font-body); font-weight: 600; color: var(--color-cinnamon); }
+  .values__ico { width: 2.1rem; height: 2.1rem; display: grid; place-items: center; border-radius: 999px; background: color-mix(in srgb, var(--color-apricot) 22%, transparent); color: var(--color-terracotta); }
+  .values__ico :global(svg) { width: 1.15rem; height: 1.15rem; }
+
+  .section-h { font-size: clamp(1.8rem, 4.6vw, 2.7rem); }
+  .lede { margin-top: 1rem; font-size: 1.12rem; }
+  .lede--center, .center { text-align: center; }
+  .center .lede { margin-inline: auto; max-width: 40rem; }
+  .center .btn { margin-top: 1.5rem; }
+
+  .grid-cats { margin-top: 2rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1.5rem; }
+  .card-link { text-decoration: none; color: inherit; display: block; }
+
+  .empty { max-width: 40rem; margin: 1.5rem auto 0; text-align: center; display: grid; justify-items: center; gap: 1.2rem; }
+  .empty__cat { width: 4.5rem; height: 4.5rem; color: var(--color-apricot); }
+
+  .quote { text-align: center; }
+  .quote__heart { width: 2.4rem; height: 2.4rem; color: var(--color-peach); margin: 0 auto 1rem; }
+  .quote__t { font-family: var(--font-display); font-size: clamp(1.5rem, 4vw, 2.3rem); line-height: 1.28; color: var(--color-cream); }
+
+  @media (min-width: 860px) {
+    .hero__grid { grid-template-columns: 1.1fr .9fr; gap: 3.5rem; }
+  }
+</style>

@@ -1,0 +1,45 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, localizedPath, routes, INSTAGRAM_URL, INSTAGRAM_HANDLE, type Locale } from '../i18n/ui';
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const base = import.meta.env.BASE_URL;
+const nav = [
+  { label: t('nav.cats'), slug: routes.cats },
+  { label: t('nav.happy'), slug: routes.happy },
+  { label: t('nav.how'), slug: routes.how },
+  { label: t('nav.about'), slug: routes.about },
+  { label: t('nav.hello'), slug: routes.hello },
+];
+const year = 2026;
+---
+<footer class="sec-warm">
+  <div class="wrap ft">
+    <div class="ft__brand">
+      <span class="ft__name">Tiny Paws <em>Haven 7</em></span>
+      <p class="ft__tag">{t('footer.built')}</p>
+    </div>
+    <nav class="ft__nav" aria-label="Footer">
+      {nav.map((n) => <a href={localizedPath(base, lang, n.slug)}>{n.label}</a>)}
+    </nav>
+    <a class="ft__ig" href={INSTAGRAM_URL} target="_blank" rel="me noopener">
+      <Icon name="instagram" class="ft__igicon" />
+      <span>{INSTAGRAM_HANDLE}</span>
+    </a>
+  </div>
+  <p class="ft__copy">© {year} Tiny Paws Haven 7 · Tirana</p>
+</footer>
+
+<style>
+  .ft { display: flex; flex-wrap: wrap; gap: 2rem 3rem; align-items: flex-start; justify-content: space-between; }
+  .ft__name { font-family: var(--font-display); font-weight: 600; font-size: 1.35rem; color: var(--color-cream); }
+  .ft__name em { font-style: normal; color: var(--color-peach); }
+  .ft__tag { margin-top: .5rem; max-width: 22rem; color: color-mix(in srgb, var(--color-cream) 82%, transparent); }
+  .ft__nav { display: grid; gap: .55rem; }
+  .ft__nav a { color: color-mix(in srgb, var(--color-cream) 86%, transparent); text-decoration: none; }
+  .ft__nav a:hover { color: var(--color-honey); }
+  .ft__ig { display: inline-flex; align-items: center; gap: .55rem; color: var(--color-honey); text-decoration: none; font-weight: 600; }
+  .ft__igicon { width: 1.4rem; height: 1.4rem; }
+  .ft__copy { text-align: center; margin-top: 2.5rem; font-size: .85rem; color: color-mix(in srgb, var(--color-cream) 62%, transparent); }
+</style>

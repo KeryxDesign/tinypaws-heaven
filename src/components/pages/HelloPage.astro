@@ -1,0 +1,98 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import Icon from '../Icon.astro';
+import { useTranslations, INSTAGRAM_URL, INSTAGRAM_HANDLE, type Locale } from '../../i18n/ui';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const copy = {
+  en: {
+    title: 'Say hello',
+    lead: 'The easiest way to reach us is a message on Instagram. That is where we are most of the day, between one photo and the next.',
+    igTitle: 'Instagram',
+    igLine: 'Send us a direct message. We read every one.',
+    anyTitle: 'Write us for anything',
+    anyBody: 'To meet a kitten, to ask how adoption works, or just to say hello. There is no form to fill in. Just a message, from you to us.',
+  },
+  sq: {
+    title: 'Na shkruaj',
+    lead: 'Mënyra më e lehtë për të na kontaktuar është një mesazh në Instagram. Aty jemi pjesën më të madhe të ditës, mes një fotoje dhe tjetrës.',
+    igTitle: 'Instagram',
+    igLine: 'Na dërgo një mesazh direkt. I lexojmë të gjithë.',
+    anyTitle: 'Na shkruaj për çfarëdo gjëje',
+    anyBody: 'Për të njohur një kotele, për të pyetur si funksionon adoptimi, ose thjesht për të përshëndetur. Nuk ka formular për të plotësuar. Vetëm një mesazh, nga ti te ne.',
+  },
+}[lang];
+---
+<Base
+  title={`${copy.title} · ${t('site.name')}`}
+  description="The best way to reach us is a message on Instagram, @tinypawshaven7. Write us to meet a kitten, or just to ask a question."
+  lang={lang}
+>
+  <Header lang={lang} page="hello" />
+  <main>
+    <section class="sec sec-a">
+      <div class="wrap wrap-narrow">
+        <p class="eyebrow">{t('site.tagline')}</p>
+        <h1 class="page-h">{copy.title}</h1>
+        <p class="lede">{copy.lead}</p>
+      </div>
+    </section>
+
+    <section class="sec sec-c">
+      <div class="wrap wrap-narrow">
+        <a class="channel" href={INSTAGRAM_URL} target="_blank" rel="me noopener">
+          <span class="channel__ico"><Icon name="instagram" /></span>
+          <span class="channel__txt">
+            <span class="channel__h">{copy.igTitle}</span>
+            <span class="channel__handle">{INSTAGRAM_HANDLE}</span>
+            <span class="channel__line">{copy.igLine}</span>
+          </span>
+          <span class="channel__go"><Icon name="arrow" /></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="sec sec-warm">
+      <div class="wrap wrap-narrow center">
+        <span class="any__paw"><Icon name="paw" /></span>
+        <h2 class="section-h">{copy.anyTitle}</h2>
+        <p class="lede lede--light">{copy.anyBody}</p>
+        <a class="btn btn-honey" href={INSTAGRAM_URL} target="_blank" rel="noopener">
+          <Icon name="instagram" class="btn__ico" />{t('cta.instagram')}
+        </a>
+      </div>
+    </section>
+  </main>
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .page-h { font-size: clamp(2.2rem, 6vw, 3.6rem); }
+  .section-h { font-size: clamp(1.8rem, 4.6vw, 2.6rem); }
+  .lede { margin-top: 1rem; font-size: 1.14rem; }
+  .lede--light { color: color-mix(in srgb, var(--color-cream) 90%, transparent); max-width: 36rem; margin-inline: auto; }
+  .channel {
+    display: flex; align-items: center; gap: 1.2rem; text-decoration: none;
+    background: var(--color-cream); border: 1.5px solid color-mix(in srgb, var(--color-apricot) 55%, transparent);
+    border-radius: 20px; padding: 1.3rem 1.5rem; color: var(--color-cinnamon-ink);
+    transition: transform .18s ease-out, border-color .18s ease-out;
+  }
+  .channel:hover { transform: translateY(-2px); border-color: var(--color-apricot); }
+  .channel__ico { flex: none; width: 3.2rem; height: 3.2rem; border-radius: 16px; background: var(--color-apricot); color: var(--color-cream); display: grid; place-items: center; }
+  .channel__ico :global(svg) { width: 1.7rem; height: 1.7rem; }
+  .channel__txt { display: grid; gap: .15rem; }
+  .channel__h { font-family: var(--font-display); font-weight: 600; font-size: 1.3rem; color: var(--color-cinnamon); }
+  .channel__handle { font-weight: 600; color: var(--color-terracotta); }
+  .channel__line { color: var(--color-cinnamon-ink); }
+  .channel__go { margin-left: auto; width: 2.6rem; color: var(--color-apricot); }
+  .center { text-align: center; }
+  .center .btn { margin-top: 1.4rem; }
+  .any__paw { display: inline-grid; place-items: center; width: 3rem; height: 3rem; color: var(--color-honey); margin-bottom: .3rem; }
+  .btn__ico { width: 1.15rem; height: 1.15rem; }
+  @media (max-width: 560px) { .channel { flex-wrap: wrap; } .channel__go { display: none; } }
+</style>

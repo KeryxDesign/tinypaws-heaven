@@ -1,0 +1,129 @@
+---
+import Photo from './Photo.astro';
+import Icon from './Icon.astro';
+import { useTranslations, INSTAGRAM_URL, type Locale } from '../i18n/ui';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props { cat: CollectionEntry<'cats'>; lang: Locale; }
+const { cat, lang } = Astro.props;
+const d = cat.data;
+const t = useTranslations(lang);
+const name = cat.id.charAt(0).toUpperCase() + cat.id.slice(1);
+const past = d.status === 'adopted';
+
+const healthOrder = ['vaccinated', 'dewormed', 'neutered', 'litter', 'solid'] as const;
+const healthLabels = {
+  vaccinated: 'health.vaccinated', dewormed: 'health.dewormed', neutered: 'health.neutered',
+  litter: 'health.litter', solid: 'health.solid',
+} as const;
+const valLabels = { yes: 'val.yes', no: 'val.no', progress: 'val.progress', na: 'val.na' } as const;
+const health = (d.health ?? {}) as Record<string, 'yes' | 'no' | 'progress' | 'na'>;
+const healthItems = healthOrder.filter((k) => health[k] && health[k] !== 'na');
+
+const gwOrder = ['kids', 'cats', 'dogs'] as const;
+const gwLabels = { kids: 'goodwith.kids', cats: 'goodwith.cats', dogs: 'goodwith.dogs' } as const;
+const gwVal = { yes: 'gw.yes', no: 'gw.no', unknown: 'gw.unknown', careful: 'gw.careful' } as const;
+const gw = (d.goodWith ?? {}) as Record<string, 'yes' | 'no' | 'unknown' | 'careful'>;
+const gwItems = gwOrder.filter((k) => gw[k] && gw[k] !== 'unknown');
+---
+<article class="prof" id={cat.id}>
+  <div class="prof__grid">
+    <div class="prof__text">
+      <p class="eyebrow">{d.emotionalTitle[lang]}</p>
+      <h2 class="prof__name">{name}</h2>
+      <p class="prof__sub">{d.ageLabel[lang]} · {d.oneLiner[lang]}</p>
+
+      <div class="prof__media prof__media--inline">
+        <Photo src={d.cover} alt={name} label={t('photo.coming')} />
+      </div>
+
+      <div class="prof__body">
+        <p class="dropcap">{d.rescue[lang]}</p>
+        {d.personality?.[lang] && <p set:html={d.personality[lang].replace(/\n\n/g, '</p><p>')} />}
+        {d.habit?.[lang] && (
+          <>
+            <h3 class="prof__h">{t('card.habit')}</h3>
+            <p>{d.habit[lang]}</p>
+          </>
+        )}
+        {d.story?.[lang] && (
+          <>
+            <h3 class="prof__h">{t('card.story')}</h3>
+            <p>{d.story[lang]}</p>
+          </>
+        )}
+      </div>
+
+      {healthItems.length > 0 && (
+        <div class="prof__health">
+          <div class="prof__band">{t('health.title', { name })}</div>
+          <ul class="checklist">
+            {healthItems.map((k) => (
+              <li>
+                <span class="tick"><Icon name="check" /></span>
+                <span>{t(healthLabels[k])}: <em>{t(valLabels[health[k]])}</em></span>
+              </li>
+            ))}
+          </ul>
+          {gwItems.length > 0 && (
+            <p class="prof__gw">
+              <strong>{t('goodwith.title')}:</strong>{' '}
+              {gwItems.map((k, i) => (
+                <span>{i > 0 ? ' · ' : ''}{t(gwLabels[k])} ({t(gwVal[gw[k]])})</span>
+              ))}
+            </p>
+          )}
+        </div>
+      )}
+
+      {past && d.happyEnding?.[lang] && (
+        <div class="prof__ending">
+          <h3 class="prof__h">{t('card.happyending')}</h3>
+          <p>{d.happyEnding[lang]}</p>
+        </div>
+      )}
+
+      {!past && (
+        <a class="btn btn-primary prof__cta" href={INSTAGRAM_URL} target="_blank" rel="noopener">
+          <Icon name="instagram" class="btn__ig" />{t('cta.instagram')}
+        </a>
+      )}
+    </div>
+
+    <div class="prof__media prof__media--side">
+      <Photo src={d.cover} alt={name} label={t('photo.coming')} />
+      <span class:list={['pill prof__pill', past ? 'pill-adopted' : 'pill-adoptable']}>
+        {past ? t('status.adopted') : t('status.adoptable')}
+      </span>
+    </div>
+  </div>
+</article>
+<style>
+  .prof__grid { display: grid; grid-template-columns: 1fr; gap: 1.6rem; }
+  .prof__name { font-size: clamp(2.4rem, 7vw, 4rem); }
+  .prof__sub { font-family: var(--font-body); font-style: italic; color: var(--color-terracotta); font-size: 1.12rem; margin-top: .3rem; }
+  .prof__body { margin-top: 1.3rem; }
+  .prof__body p { margin-top: .9rem; }
+  .prof__body p:first-child { margin-top: 0; }
+  .prof__h { font-size: 1.35rem; margin-top: 1.5rem; color: var(--color-terracotta); }
+  .prof__health { margin-top: 1.8rem; }
+  .prof__band { background: var(--color-cocoa); color: var(--color-cream); font-family: var(--font-display); font-weight: 600;
+    font-size: 1.15rem; padding: .7rem 1.1rem; border-radius: 12px 12px 4px 12px; }
+  .checklist { margin-top: 1rem; }
+  .checklist em { font-style: italic; color: var(--color-terracotta); }
+  .prof__gw { margin-top: 1rem; color: var(--color-cinnamon-ink); }
+  .prof__ending { margin-top: 1.8rem; border-left: 4px solid var(--color-apricot); padding-left: 1.1rem; }
+  .prof__cta { margin-top: 1.8rem; }
+  .btn__ig { width: 1.15rem; height: 1.15rem; }
+
+  .prof__media { border-radius: 22px; overflow: hidden; aspect-ratio: 4/5; box-shadow: 0 20px 40px -26px rgba(74,53,38,.5); position: relative; }
+  .prof__media--inline { display: block; margin: 1.4rem 0 0; }
+  .prof__media--side { display: none; }
+  .prof__pill { position: absolute; top: .8rem; left: .8rem; }
+
+  @media (min-width: 860px) {
+    .prof__grid { grid-template-columns: 1.05fr 1fr; gap: 3rem; align-items: start; }
+    .prof__media--inline { display: none; }
+    .prof__media--side { display: block; position: sticky; top: 5rem; }
+  }
+</style>

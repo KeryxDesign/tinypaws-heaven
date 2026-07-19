@@ -1,0 +1,94 @@
+---
+import { Image } from 'astro:assets';
+import logoMark from '../assets/logo-mark.png';
+import Icon from './Icon.astro';
+import { useTranslations, localizedPath, routes, type Locale } from '../i18n/ui';
+
+interface Props { lang: Locale; page: keyof typeof routes; }
+const { lang, page } = Astro.props;
+const t = useTranslations(lang);
+const base = import.meta.env.BASE_URL;
+const other: Locale = lang === 'en' ? 'sq' : 'en';
+
+const nav = [
+  { key: 'home', label: t('nav.home'), slug: routes.home },
+  { key: 'cats', label: t('nav.cats'), slug: routes.cats },
+  { key: 'happy', label: t('nav.happy'), slug: routes.happy },
+  { key: 'how', label: t('nav.how'), slug: routes.how },
+  { key: 'about', label: t('nav.about'), slug: routes.about },
+  { key: 'hello', label: t('nav.hello'), slug: routes.hello },
+] as const;
+
+const homeHref = localizedPath(base, lang, routes.home);
+const altHref = localizedPath(base, other, routes[page]);
+---
+<header class="site-header">
+  <div class="wrap hdr">
+    <a href={homeHref} class="brand" aria-label={t('site.name')}>
+      <Image src={logoMark} alt="" width={112} height={116} class="brand__mark" loading="eager" />
+      <span class="brand__name">Tiny Paws <em>Haven 7</em></span>
+    </a>
+
+    <input type="checkbox" id="navtoggle" class="navtoggle" hidden />
+    <label for="navtoggle" class="burger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav class="nav" aria-label={t('site.name')}>
+      {nav.map((n) => (
+        <a
+          href={localizedPath(base, lang, n.slug)}
+          class:list={['nav__link', { 'is-active': n.key === page }]}
+          aria-current={n.key === page ? 'page' : undefined}
+        >{n.label}</a>
+      ))}
+      <a href={altHref} class="lang" hreflang={other} aria-label={t('lang.label')}>
+        <Icon name="paw" class="lang__paw" />{t('lang.other')}
+      </a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky; top: 0; z-index: 40;
+    background: color-mix(in srgb, var(--color-cream) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-apricot) 30%, transparent);
+  }
+  .hdr { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: .6rem; }
+  .brand { display: inline-flex; align-items: center; gap: .6rem; text-decoration: none; }
+  .brand__mark { width: 46px; height: auto; }
+  .brand__name { font-family: var(--font-display); font-weight: 600; font-size: 1.18rem; color: var(--color-cinnamon); line-height: 1; }
+  .brand__name em { font-style: normal; color: var(--color-apricot); }
+
+  .nav { display: flex; align-items: center; gap: 1.15rem; }
+  .nav__link { font-family: var(--font-body); font-size: 1rem; color: var(--color-cinnamon-ink); text-decoration: none; padding: .2rem 0; border-bottom: 2px solid transparent; }
+  .nav__link:hover { color: var(--color-terracotta); }
+  .nav__link.is-active { border-bottom-color: var(--color-apricot); color: var(--color-terracotta); }
+
+  .lang { display: inline-flex; align-items: center; gap: .35rem; font-family: var(--font-body); font-size: .95rem; font-weight: 600;
+    color: var(--color-slate); text-decoration: none; padding: .3rem .7rem; border: 1.5px solid color-mix(in srgb, var(--color-slate) 35%, transparent); border-radius: 999px; }
+  .lang:hover { border-color: var(--color-slate); }
+  .lang__paw { width: 1rem; height: 1rem; color: var(--color-apricot); }
+
+  .burger, .navtoggle { display: none; }
+
+  @media (max-width: 900px) {
+    .burger { display: inline-flex; flex-direction: column; gap: 5px; padding: .5rem; cursor: pointer; background: none; border: 0; }
+    .burger span { width: 26px; height: 2.5px; background: var(--color-cinnamon); border-radius: 2px; transition: .2s; }
+    .nav {
+      position: absolute; top: 100%; left: 0; right: 0;
+      flex-direction: column; align-items: stretch; gap: 0;
+      background: var(--color-cream); border-bottom: 1px solid color-mix(in srgb, var(--color-apricot) 30%, transparent);
+      padding: 0 clamp(1.15rem, 4vw, 2.5rem);
+      max-height: 0; overflow: hidden; opacity: 0; visibility: hidden;
+      transition: max-height .28s ease-out, opacity .2s ease-out, visibility .28s, padding .28s ease-out;
+      box-shadow: 0 16px 30px -22px rgba(74,53,38,.5);
+    }
+    .navtoggle:checked ~ .nav { max-height: 28rem; opacity: 1; visibility: visible; padding-top: .5rem; padding-bottom: 1.2rem; }
+    .nav__link { padding: .7rem 0; border-bottom: 1px solid color-mix(in srgb, var(--color-apricot) 20%, transparent); }
+    .nav__link.is-active { border-bottom-color: var(--color-apricot); }
+    .lang { margin-top: .8rem; align-self: flex-start; }
+  }
+</style>

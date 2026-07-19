@@ -1,0 +1,59 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Astro
+        run: npm run build
+
+      - name: Secret scan (blocca segreti nel build)
+        run: |
+          echo "Scansione dist/ per chiavi/segreti esposti..."
+          if grep -rIEn 'xkeysib-[A-Za-z0-9]{10,}|re_[A-Za-z0-9]{8}_[A-Za-z0-9]{20,}|sk_live_[A-Za-z0-9]{10,}|sk_test_[A-Za-z0-9]{10,}|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{20,}|xoxb-[0-9]|EAA[A-Za-z0-9]{30,}|whsec_[A-Za-z0-9]{10,}|AIza[0-9A-Za-z_-]{30,}|service_role' dist/ ; then
+            echo "::error::SEGRETO trovato nel build. Deploy BLOCCATO. Vedi feedback_no_secrets_client_side."
+            exit 1
+          fi
+          echo "OK: nessun segreto nel build."
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

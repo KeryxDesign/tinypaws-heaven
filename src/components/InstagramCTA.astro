@@ -1,0 +1,30 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, INSTAGRAM_URL, INSTAGRAM_HANDLE, type Locale } from '../i18n/ui';
+interface Props { lang: Locale; heading: string; text?: string; buttonKey?: 'cta.instagram' | 'cta.follow'; }
+const { lang, heading, text, buttonKey = 'cta.instagram' } = Astro.props;
+const t = useTranslations(lang);
+---
+<section class="sec sec-warm">
+  <div class="wrap wrap-narrow cta">
+    <p class="cta__handle">{INSTAGRAM_HANDLE}</p>
+    <h2 class="cta__h">{heading}</h2>
+    {text && <p class="cta__t">{text}</p>}
+    <div class="cta__row">
+      <Icon name="arrow" class="cta__arrow" />
+      <a class="btn btn-honey" href={INSTAGRAM_URL} target="_blank" rel="noopener">
+        <Icon name="instagram" class="btn__ig" />{t(buttonKey)}
+      </a>
+    </div>
+  </div>
+</section>
+<style>
+  .cta { text-align: center; }
+  .cta__handle { font-family: var(--font-body); font-style: italic; color: var(--color-honey); margin-bottom: .5rem; }
+  .cta__h { font-size: clamp(1.7rem, 4.5vw, 2.6rem); }
+  .cta__t { margin-top: .9rem; color: color-mix(in srgb, var(--color-cream) 86%, transparent); max-width: 34rem; margin-inline: auto; }
+  .cta__row { margin-top: 1.6rem; display: inline-flex; align-items: center; gap: .3rem; }
+  .cta__arrow { width: 3rem; height: 1.5rem; color: var(--color-honey); }
+  .btn__ig { width: 1.15rem; height: 1.15rem; }
+  @media (max-width: 520px) { .cta__arrow { display: none; } }
+</style>

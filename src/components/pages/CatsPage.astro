@@ -1,0 +1,100 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import Icon from '../Icon.astro';
+import CatProfile from '../CatProfile.astro';
+import InstagramCTA from '../InstagramCTA.astro';
+import { useTranslations, localizedPath, routes, INSTAGRAM_URL, type Locale } from '../../i18n/ui';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const base = import.meta.env.BASE_URL;
+
+const cats = await getCollection('cats');
+const adoptable = cats.filter((c) => c.data.status === 'adoptable').sort((a, b) => a.data.order - b.data.order);
+
+const copy = {
+  en: {
+    title: 'The kittens with us now',
+    intro: 'Each one lives in our home until the right family shows up. Below is who they are: their story, their health, and the small things that make them themselves.',
+    intro2: 'If one of them stays with you while you read, that is usually a good sign.',
+    howTitle: 'Thinking about it?',
+    howBody: 'There is no form and no waiting list. You send us a message, we get to know each other, and the kitten settles in. Here is how it goes.',
+    howLink: 'How adoption works',
+    ctaHeading: 'Want to meet one of them?',
+    ctaText: 'Send us a message on Instagram. Even just to ask a question about a kitten.',
+  },
+  sq: {
+    title: 'Kotelet që kemi tani',
+    intro: 'Secili jeton në shtëpinë tonë derisa të vijë familja e duhur. Më poshtë je kush janë: historia e tyre, shëndeti dhe gjërat e vogla që i bëjnë vetvete.',
+    intro2: 'Nëse njëri prej tyre të mbetet në mendje ndërsa lexon, zakonisht është shenjë e mirë.',
+    howTitle: 'Po mendon për të?',
+    howBody: 'Nuk ka formular dhe nuk ka listë pritjeje. Na dërgon një mesazh, njihemi, dhe kotelja mësohet me shtëpinë. Ja si ndodh.',
+    howLink: 'Si funksionon adoptimi',
+    ctaHeading: 'Do të njohësh njërin prej tyre?',
+    ctaText: 'Na dërgo një mesazh në Instagram. Qoftë edhe vetëm për të pyetur për një kotele.',
+  },
+}[lang];
+---
+<Base
+  title={`${copy.title} · ${t('site.name')}`}
+  description="The kittens currently in our care in Tirana. Their story, their health, their little habits. Message us on Instagram to meet them."
+  lang={lang}
+>
+  <Header lang={lang} page="cats" />
+  <main>
+    <section class="sec sec-a">
+      <div class="wrap wrap-narrow">
+        <p class="eyebrow">{t('site.tagline')}</p>
+        <h1 class="page-h">{copy.title}</h1>
+        <p class="lede">{copy.intro}</p>
+        <p class="lede">{copy.intro2}</p>
+      </div>
+    </section>
+
+    {adoptable.length > 0 ? (
+      adoptable.map((cat, i) => (
+        <section class:list={['sec', i % 2 === 0 ? 'sec-b' : 'sec-a']}>
+          <div class="wrap"><CatProfile cat={cat} lang={lang} /></div>
+        </section>
+      ))
+    ) : (
+      <section class="sec sec-c">
+        <div class="wrap wrap-narrow empty">
+          <span class="empty__cat"><Icon name="cat" /></span>
+          <h2 class="section-h">{t('cats.empty.title')}</h2>
+          <p class="lede">{t('cats.empty.body')}</p>
+          <a class="btn btn-primary" href={INSTAGRAM_URL} target="_blank" rel="noopener">
+            <Icon name="instagram" class="btn__ico" />{t('cta.follow')}
+          </a>
+        </div>
+      </section>
+    )}
+
+    <section class="sec sec-c">
+      <div class="wrap wrap-narrow center">
+        <h2 class="section-h">{copy.howTitle}</h2>
+        <p class="lede">{copy.howBody}</p>
+        <a class="btn btn-outline" href={localizedPath(base, lang, routes.how)}>{copy.howLink}</a>
+      </div>
+    </section>
+
+    <InstagramCTA lang={lang} heading={copy.ctaHeading} text={copy.ctaText} />
+  </main>
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .page-h { font-size: clamp(2.1rem, 5.5vw, 3.4rem); }
+  .section-h { font-size: clamp(1.8rem, 4.6vw, 2.6rem); }
+  .lede { margin-top: 1rem; font-size: 1.12rem; }
+  .center { text-align: center; }
+  .center .lede { margin-inline: auto; max-width: 40rem; }
+  .center .btn { margin-top: 1.4rem; }
+  .btn__ico { width: 1.15rem; height: 1.15rem; }
+  .empty { text-align: center; display: grid; justify-items: center; gap: 1rem; }
+  .empty__cat { width: 4.5rem; height: 4.5rem; color: var(--color-apricot); }
+</style>

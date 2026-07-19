@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Crawler AI esplicitamente ammessi (findability AEO/GEO — regola /sito).
+# Rimuovere o mettere Disallow SOLO se il cliente chiede di non comparire nelle AI.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+# CAMBIAMI-GH: aggiornare con l'URL reale una volta scelto l'account GitHub Pages.
+Sitemap: https://CAMBIAMI-GH.github.io/tinypaws-heaven/sitemap-index.xml

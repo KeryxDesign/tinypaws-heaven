@@ -1,0 +1,104 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import InstagramCTA from '../InstagramCTA.astro';
+import logoMark from '../../assets/logo-mark.png';
+import { useTranslations, type Locale } from '../../i18n/ui';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// PLACEHOLDER: nome della compagna + frase d'origine (da confermare con Davide)
+const PARTNER = '[name]';
+
+const copy = {
+  en: {
+    title: 'About us',
+    lead: `We're Davide and ${PARTNER}, and we live in Tirana. Not an association, not a shelter, not a team with a donation box. Two people with a home, and every so often that home has a kitten in it.`,
+    startTitle: 'How it started',
+    startBody: 'It started with one kitten we couldn’t walk past. There are a lot of stray cats in this city. We can’t help all of them, so we help one at a time, properly.',
+    meansTitle: 'What fostering actually means',
+    meansBody: 'Every kitten passes through our home. It sleeps here, eats here, learns the litter box here. We get it healthy: dewormed, checked, and cared for until it’s strong enough. Then we look, without rushing, for a family that fits.',
+    meansBody2: 'For a while our couch belongs to a small cat. Then it moves on, and the couch is ours again. Until the next one.',
+    whyTitle: 'Why we do it',
+    whyBody: 'Because a kitten that would have grown up on the street gets a warm room instead, and then a family. That is a good enough reason for us.',
+    ctaHeading: 'Come say hello',
+    ctaText: 'The day-to-day lives on Instagram. Come see it, and write to us any time.',
+  },
+  sq: {
+    title: 'Rreth nesh',
+    lead: `Jemi Davide dhe ${PARTNER}, dhe jetojmë në Tiranë. As shoqatë, as strehë, as ekip me një kuti dhurimesh. Dy njerëz me një shtëpi, dhe herë pas here ajo shtëpi ka një kotele brenda.`,
+    startTitle: 'Si nisi',
+    startBody: 'Nisi me një kotele pranë së cilës nuk kaluam dot. Ka shumë mace endacake në këtë qytet. Nuk mund t’i ndihmojmë të gjitha, kështu që ndihmojmë një nga një, si duhet.',
+    meansTitle: 'Çfarë do të thotë vërtet strehim',
+    meansBody: 'Çdo kotele kalon nga shtëpia jonë. Fle këtu, ha këtu, mëson kutinë e rërës këtu. E bëjmë të shëndetshme: e çvërmojmë, e kontrollojmë dhe kujdesemi derisa të jetë mjaft e fortë. Pastaj kërkojmë, pa nxitim, një familje që i shkon.',
+    meansBody2: 'Për një kohë divani ynë i përket një maceje të vogël. Pastaj ajo ikën, dhe divani është përsëri yni. Deri te tjetra.',
+    whyTitle: 'Pse e bëjmë',
+    whyBody: 'Sepse një kotele që do të ishte rritur në rrugë merr në vend të saj një dhomë të ngrohtë, dhe pastaj një familje. Kjo është arsye e mjaftueshme për ne.',
+    ctaHeading: 'Eja të përshëndetesh',
+    ctaText: 'Përditshmëria jeton në Instagram. Eja ta shohësh, dhe na shkruaj kur të duash.',
+  },
+}[lang];
+---
+<Base
+  title={`${copy.title} · ${t('site.name')}`}
+  description="We're Davide and our partner, based in Tirana. We foster stray kittens in our own home until they find a family. Here's why."
+  lang={lang}
+>
+  <Header lang={lang} page="about" />
+  <main>
+    <section class="sec sec-cool about-hero">
+      <div class="wrap about-hero__grid">
+        <div>
+          <p class="eyebrow">{t('site.tagline')}</p>
+          <h1 class="page-h">{copy.title}</h1>
+          <p class="lede lede--light">{copy.lead}</p>
+        </div>
+        <div class="about-hero__badge">
+          <Image src={logoMark} alt="" width={340} height={352} />
+        </div>
+      </div>
+    </section>
+
+    <section class="sec sec-a">
+      <div class="wrap wrap-narrow">
+        <h2 class="section-h">{copy.startTitle}</h2>
+        <p class="lede">{copy.startBody}</p>
+      </div>
+    </section>
+
+    <section class="sec sec-b">
+      <div class="wrap wrap-narrow">
+        <h2 class="section-h">{copy.meansTitle}</h2>
+        <p class="lede">{copy.meansBody}</p>
+        <p class="lede">{copy.meansBody2}</p>
+      </div>
+    </section>
+
+    <section class="sec sec-c">
+      <div class="wrap wrap-narrow">
+        <h2 class="section-h">{copy.whyTitle}</h2>
+        <p class="lede">{copy.whyBody}</p>
+      </div>
+    </section>
+
+    <InstagramCTA lang={lang} heading={copy.ctaHeading} text={copy.ctaText} buttonKey="cta.follow" />
+  </main>
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .page-h { font-size: clamp(2.2rem, 6vw, 3.6rem); }
+  .section-h { font-size: clamp(1.8rem, 4.6vw, 2.6rem); }
+  .lede { margin-top: 1rem; font-size: 1.14rem; }
+  .lede--light { color: color-mix(in srgb, var(--color-cream) 90%, transparent); max-width: 34rem; }
+  .about-hero__grid { display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: center; }
+  .about-hero__badge { justify-self: center; width: min(220px, 60%); background: var(--color-cream); border-radius: 28px; padding: 1.6rem; box-shadow: 0 24px 48px -30px rgba(0,0,0,.5); }
+  @media (min-width: 820px) {
+    .about-hero__grid { grid-template-columns: 1.4fr .8fr; gap: 3rem; }
+    .about-hero__badge { justify-self: end; }
+  }
+</style>

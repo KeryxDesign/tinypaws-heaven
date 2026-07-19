@@ -1,0 +1,103 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import InstagramCTA from '../InstagramCTA.astro';
+import { useTranslations, type Locale } from '../../i18n/ui';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const copy = {
+  en: {
+    title: 'How adoption works',
+    intro: 'There is no office, no paperwork pile, no waiting list. It is two people making sure a kitten goes to the right home. That is it.',
+    steps: [
+      { h: 'You message us', b: 'Send us a message on Instagram. Even just to ask a question is fine. Tell us a little about you and your home.' },
+      { h: 'We get to know each other', b: 'We chat. You ask us anything about the kitten, and we ask you a few things too. No test, no pressure. We just want the match to be right.' },
+      { h: 'An honest conversation', b: 'We are straight with you about the kitten: the good, and the parts that need patience. A young cat needs time, care, and a bit of mess tolerated. Better to know now.' },
+      { h: 'The kitten settles in', b: 'When it feels right, the kitten comes to you and takes a few days to find its feet. We stay reachable. If something comes up, you write to us.' },
+      { h: 'Home for good', b: 'That is the part we do all this for. And we love a photo now and then, if you feel like sending one.' },
+    ],
+    honestTitle: 'What we don’t do',
+    honestBody: 'We don’t rush a match, and we don’t hand a kitten to just anyone. If a home isn’t right, we say so, kindly. It’s not about you; it’s about a small cat that only gets one new start.',
+    ctaHeading: 'Ready to start?',
+    ctaText: 'A message on Instagram is all it takes.',
+  },
+  sq: {
+    title: 'Si funksionon adoptimi',
+    intro: 'Nuk ka zyrë, nuk ka grumbull letrash, nuk ka listë pritjeje. Janë dy njerëz që sigurohen që një kotele të shkojë në shtëpinë e duhur. Kaq.',
+    steps: [
+      { h: 'Na shkruan', b: 'Na dërgo një mesazh në Instagram. Qoftë edhe vetëm për të pyetur. Na trego pak për ty dhe shtëpinë tënde.' },
+      { h: 'Njihemi me njëri-tjetrin', b: 'Bisedojmë. Na pyet çfarë të duash për kotelen, dhe të pyesim edhe ne ca gjëra. Pa test, pa presion. Duam vetëm që përputhja të jetë e duhura.' },
+      { h: 'Një bisedë e sinqertë', b: 'Jemi të drejtpërdrejtë me ty për kotelen: e mira, dhe pjesët që kërkojnë durim. Një mace e re ka nevojë për kohë, kujdes dhe pak rrëmujë të toleruar. Më mirë ta dish që tani.' },
+      { h: 'Kotelja mësohet me shtëpinë', b: 'Kur ndihet e duhura, kotelja vjen te ti dhe i duhen ca ditë të gjejë vetveten. Mbetemi të arritshëm. Nëse del diçka, na shkruan.' },
+      { h: 'Shtëpi për gjithmonë', b: 'Kjo është pjesa për të cilën e bëjmë të gjithë këtë. Dhe na pëlqen një foto herë pas here, po të kesh dëshirë.' },
+    ],
+    honestTitle: 'Çfarë nuk bëjmë',
+    honestBody: 'Nuk e nxitojmë një përputhje, dhe nuk ia japim kotelen kujtdo. Nëse një shtëpi nuk është e duhura, e themi, me mirësjellje. Nuk ka të bëjë me ty; ka të bëjë me një mace të vogël që merr vetëm një fillim të ri.',
+    ctaHeading: 'Gati për të nisur?',
+    ctaText: 'Mjafton një mesazh në Instagram.',
+  },
+}[lang];
+---
+<Base
+  title={`${copy.title} · ${t('site.name')}`}
+  description="No forms, no bureaucracy. You message us on Instagram, we get to know each other, and the kitten settles in. Here's how it goes."
+  lang={lang}
+>
+  <Header lang={lang} page="how" />
+  <main>
+    <section class="sec sec-a">
+      <div class="wrap wrap-narrow">
+        <p class="eyebrow">{t('site.tagline')}</p>
+        <h1 class="page-h">{copy.title}</h1>
+        <p class="lede">{copy.intro}</p>
+      </div>
+    </section>
+
+    <section class="sec sec-b">
+      <div class="wrap wrap-narrow">
+        <ol class="steps">
+          {copy.steps.map((s, i) => (
+            <li class="step">
+              <span class="step__n">{i + 1}</span>
+              <div>
+                <h3 class="step__h">{s.h}</h3>
+                <p class="step__b">{s.b}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="sec sec-cool">
+      <div class="wrap wrap-narrow">
+        <h2 class="section-h">{copy.honestTitle}</h2>
+        <p class="lede lede--light">{copy.honestBody}</p>
+      </div>
+    </section>
+
+    <InstagramCTA lang={lang} heading={copy.ctaHeading} text={copy.ctaText} />
+  </main>
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .page-h { font-size: clamp(2.1rem, 5.5vw, 3.4rem); }
+  .section-h { font-size: clamp(1.8rem, 4.6vw, 2.6rem); }
+  .lede { margin-top: 1rem; font-size: 1.12rem; }
+  .lede--light { color: color-mix(in srgb, var(--color-cream) 88%, transparent); max-width: 40rem; }
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.8rem; counter-reset: none; }
+  .step { display: grid; grid-template-columns: auto 1fr; gap: 1.1rem; align-items: start; }
+  .step__n {
+    font-family: var(--font-display); font-weight: 600; font-size: 1.5rem;
+    width: 3rem; height: 3rem; flex: none; border-radius: 999px;
+    background: var(--color-apricot); color: var(--color-cocoa);
+    display: grid; place-items: center;
+  }
+  .step__h { font-size: 1.4rem; color: var(--color-terracotta); }
+  .step__b { margin-top: .35rem; }
+</style>

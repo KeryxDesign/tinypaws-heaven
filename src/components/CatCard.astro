@@ -1,0 +1,32 @@
+---
+import Photo from './Photo.astro';
+import { useTranslations, type Locale } from '../i18n/ui';
+import type { CollectionEntry } from 'astro:content';
+interface Props { cat: CollectionEntry<'cats'>; lang: Locale; }
+const { cat, lang } = Astro.props;
+const d = cat.data;
+const t = useTranslations(lang);
+const name = cat.id.charAt(0).toUpperCase() + cat.id.slice(1);
+---
+<article class="cat-card reveal">
+  <div class="cat-card__media">
+    <Photo src={d.cover} alt={name} label={t('photo.coming')} />
+    <div class="cat-card__pills">
+      {d.newArrival && d.status === 'adoptable' && <span class="pill pill-honey">{t('badge.new')}</span>}
+      <span class:list={['pill', d.status === 'adoptable' ? 'pill-adoptable' : 'pill-adopted']}>
+        {d.status === 'adoptable' ? t('status.adoptable') : t('status.adopted')}
+      </span>
+    </div>
+  </div>
+  <div class="cat-card__body">
+    <h3 class="cat-card__name">{name}</h3>
+    <p class="cat-card__age">{d.ageLabel[lang]}</p>
+    <p class="cat-card__line">{d.emotionalTitle[lang]}</p>
+  </div>
+</article>
+<style>
+  .cat-card__pills { position: absolute; top: .7rem; left: .7rem; display: flex; flex-wrap: wrap; gap: .4rem; }
+  .cat-card__name { font-size: 1.5rem; }
+  .cat-card__age { font-family: var(--font-body); font-style: italic; color: var(--color-terracotta); font-size: .95rem; margin-top: -.15rem; }
+  .cat-card__line { color: var(--color-cinnamon-ink); }
+</style>

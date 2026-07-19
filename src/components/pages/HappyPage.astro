@@ -1,0 +1,79 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import Icon from '../Icon.astro';
+import CatProfile from '../CatProfile.astro';
+import { useTranslations, localizedPath, routes, type Locale } from '../../i18n/ui';
+
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const base = import.meta.env.BASE_URL;
+
+const cats = await getCollection('cats');
+const adopted = cats.filter((c) => c.data.status === 'adopted').sort((a, b) => a.data.order - b.data.order);
+
+const copy = {
+  en: {
+    title: 'The ones who made it',
+    intro: 'Every kitten here started the same way: alone, small, somewhere in Tirana. Then a family came, and the story got a better ending.',
+    intro2: 'We keep them here so you can see how it goes.',
+    backTitle: 'Meet the kittens who need a home now',
+    backBody: 'There is usually a little one with us, waiting for the same kind of ending.',
+    backLink: t('cta.meet'),
+  },
+  sq: {
+    title: 'Ata që ia dolën',
+    intro: 'Çdo kotele këtu nisi njësoj: vetëm, e vogël, diku në Tiranë. Pastaj erdhi një familje, dhe historia mori një fund më të mirë.',
+    intro2: 'I mbajmë këtu që të shohësh si shkon.',
+    backTitle: 'Njihu me kotelet që kanë nevojë për shtëpi tani',
+    backBody: 'Zakonisht kemi një të vogël me ne, që pret të njëjtin lloj fundi.',
+    backLink: t('cta.meet'),
+  },
+}[lang];
+---
+<Base
+  title={`${copy.title} · ${t('site.name')}`}
+  description="The kittens who came through our home in Tirana and found a family. Cinnamon's story and more happy endings."
+  lang={lang}
+>
+  <Header lang={lang} page="happy" />
+  <main>
+    <section class="sec sec-a">
+      <div class="wrap wrap-narrow">
+        <p class="eyebrow">{t('site.tagline')}</p>
+        <h1 class="page-h">{copy.title}</h1>
+        <p class="lede">{copy.intro}</p>
+        <p class="lede">{copy.intro2}</p>
+      </div>
+    </section>
+
+    {adopted.map((cat, i) => (
+      <section class:list={['sec', i % 2 === 0 ? 'sec-b' : 'sec-a']}>
+        <div class="wrap"><CatProfile cat={cat} lang={lang} /></div>
+      </section>
+    ))}
+
+    <section class="sec sec-warm">
+      <div class="wrap wrap-narrow center">
+        <span class="back__cat"><Icon name="paw" /></span>
+        <h2 class="section-h">{copy.backTitle}</h2>
+        <p class="lede">{copy.backBody}</p>
+        <a class="btn btn-honey" href={localizedPath(base, lang, routes.cats)}>{copy.backLink}</a>
+      </div>
+    </section>
+  </main>
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .page-h { font-size: clamp(2.1rem, 5.5vw, 3.4rem); }
+  .section-h { font-size: clamp(1.8rem, 4.6vw, 2.6rem); }
+  .lede { margin-top: 1rem; font-size: 1.12rem; }
+  .center { text-align: center; }
+  .center .lede { margin-inline: auto; max-width: 38rem; }
+  .center .btn { margin-top: 1.4rem; }
+  .back__cat { display: inline-grid; place-items: center; width: 3rem; height: 3rem; color: var(--color-honey); margin-bottom: .4rem; }
+</style>

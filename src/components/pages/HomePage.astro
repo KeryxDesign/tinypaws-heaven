@@ -19,14 +19,11 @@ const adoptable = cats.filter((c) => c.data.status === 'adoptable').sort((a, b) 
 const adopted = cats.filter((c) => c.data.status === 'adopted');
 const hasKittens = adoptable.length > 0;
 
-// PLACEHOLDER: nome della compagna di Davide (da confermare)
-const PARTNER = '[name]';
-
 const copy = {
   en: {
     heroLead: 'We keep finding kittens on the streets of Tirana.',
     heroSub: 'So we take them home for a while.',
-    heroLine: `We're Davide and ${PARTNER}. Not a shelter, not an association. Two people with a spare room and a soft spot for small cats.`,
+    heroLine: `We're Lua and Davide. Not a shelter, not an association. Two people with a spare room and a soft spot for small cats.`,
     values: ['Fostered in our home', 'Vaccinated & checked', 'Matched with the right family'],
     whoTitle: 'What we actually do',
     whoBody: `Every so often, a kitten needs a place to be safe. We take one in, get it healthy, and look, without rushing, for a family that fits. For a while our couch belongs to a small cat. Then it moves on to its own home, and we wait for the next little face.`,
@@ -45,7 +42,7 @@ const copy = {
   sq: {
     heroLead: 'Vazhdojmë të gjejmë kotele në rrugët e Tiranës.',
     heroSub: 'Kështu i marrim në shtëpi për një kohë.',
-    heroLine: `Jemi Davide dhe ${PARTNER}. As strehë, as shoqatë. Dy njerëz me një dhomë të lirë dhe një dobësi për macet e vogla.`,
+    heroLine: `Jemi Lua dhe Davide. As strehë, as shoqatë. Dy njerëz me një dhomë të lirë dhe një dobësi për macet e vogla.`,
     values: ['Të strehuar në shtëpinë tonë', 'Të vaksinuar dhe të kontrolluar', 'Të përshtatur me familjen e duhur'],
     whoTitle: 'Çfarë bëjmë në të vërtetë',
     whoBody: `Herë pas here, një kotele ka nevojë për një vend të sigurt. Marrim një, e bëjmë të shëndetshme dhe kërkojmë, pa nxitim, një familje që i shkon. Për një kohë divani ynë i përket një maceje të vogël. Pastaj ajo shkon në shtëpinë e vet, dhe ne presim fytyrën tjetër të vogël.`,

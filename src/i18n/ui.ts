@@ -12,7 +12,7 @@ export const routes = {
   happy: 'happy-tails',
   how: 'how-adoption-works',
   about: 'about',
-  hello: 'say-hello',
+  hello: 'contact',
 } as const;
 
 export const ui = {
@@ -24,7 +24,7 @@ export const ui = {
     'nav.happy': 'Happy Tails',
     'nav.how': 'How Adoption Works',
     'nav.about': 'About Us',
-    'nav.hello': 'Say Hello',
+    'nav.hello': 'Contact Us',
     'lang.other': 'Shqip',
     'lang.label': 'Language',
 
@@ -32,7 +32,7 @@ export const ui = {
     'cta.follow': 'Follow @tinypawshaven7',
     'cta.meet': 'Meet the kittens',
     'cta.happy': 'See the happy tails',
-    'cta.hello': 'Say hello',
+    'cta.hello': 'Contact us',
 
     'status.adoptable': 'Looking for a home',
     'status.adopted': 'Adopted',
@@ -84,7 +84,7 @@ export const ui = {
     'nav.happy': 'Fund i lumtur',
     'nav.how': 'Si funksionon adoptimi',
     'nav.about': 'Rreth nesh',
-    'nav.hello': 'Na shkruaj',
+    'nav.hello': 'Na kontakto',
     'lang.other': 'English',
     'lang.label': 'Gjuha',
 
@@ -92,7 +92,7 @@ export const ui = {
     'cta.follow': 'Na ndiq @tinypawshaven7',
     'cta.meet': 'Njihu me kotelet',
     'cta.happy': 'Shiko fundet e lumtura',
-    'cta.hello': 'Na shkruaj',
+    'cta.hello': 'Na kontakto',
 
     'status.adoptable': 'Në kërkim të një shtëpie',
     'status.adopted': 'Adoptuar',

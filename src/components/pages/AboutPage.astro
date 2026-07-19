@@ -11,13 +11,11 @@ interface Props { lang: Locale; }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
-// PLACEHOLDER: nome della compagna + frase d'origine (da confermare con Davide)
-const PARTNER = '[name]';
-
+// PLACEHOLDER: frase d'origine reale (da confermare con Davide)
 const copy = {
   en: {
     title: 'About us',
-    lead: `We're Davide and ${PARTNER}, and we live in Tirana. Not an association, not a shelter, not a team with a donation box. Two people with a home, and every so often that home has a kitten in it.`,
+    lead: `We're Lua and Davide, and we live in Tirana. Not an association, not a shelter, not a team with a donation box. Two people with a home, and every so often that home has a kitten in it.`,
     startTitle: 'How it started',
     startBody: 'It started with one kitten we couldn’t walk past. There are a lot of stray cats in this city. We can’t help all of them, so we help one at a time, properly.',
     meansTitle: 'What fostering actually means',
@@ -30,7 +28,7 @@ const copy = {
   },
   sq: {
     title: 'Rreth nesh',
-    lead: `Jemi Davide dhe ${PARTNER}, dhe jetojmë në Tiranë. As shoqatë, as strehë, as ekip me një kuti dhurimesh. Dy njerëz me një shtëpi, dhe herë pas here ajo shtëpi ka një kotele brenda.`,
+    lead: `Jemi Lua dhe Davide, dhe jetojmë në Tiranë. As shoqatë, as strehë, as ekip me një kuti dhurimesh. Dy njerëz me një shtëpi, dhe herë pas here ajo shtëpi ka një kotele brenda.`,
     startTitle: 'Si nisi',
     startBody: 'Nisi me një kotele pranë së cilës nuk kaluam dot. Ka shumë mace endacake në këtë qytet. Nuk mund t’i ndihmojmë të gjitha, kështu që ndihmojmë një nga një, si duhet.',
     meansTitle: 'Çfarë do të thotë vërtet strehim',
@@ -45,7 +43,7 @@ const copy = {
 ---
 <Base
   title={`${copy.title} · ${t('site.name')}`}
-  description="We're Davide and our partner, based in Tirana. We foster stray kittens in our own home until they find a family. Here's why."
+  description="We're Lua and Davide, based in Tirana. We foster stray kittens in our own home until they find a family. Here's why."
   lang={lang}
 >
   <Header lang={lang} page="about" />

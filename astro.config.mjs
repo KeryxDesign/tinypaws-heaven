@@ -8,7 +8,7 @@ import tailwindcss from '@tailwindcss/vite';
 //   - Project page  → site: 'https://<user>.github.io', base: '/tinypaws-heaven'
 //   - User/org page → site: 'https://<user>.github.io',  base: '/'  (repo <user>.github.io)
 //   - Dominio custom → site: 'https://tinypawsheaven.org', base: '/'
-const SITE = 'https://CAMBIAMI-GH.github.io';
+const SITE = 'https://keryxdesign.github.io';
 const BASE = '/tinypaws-heaven';
 
 export default defineConfig({

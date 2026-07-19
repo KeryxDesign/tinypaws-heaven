@@ -15,5 +15,4 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-# CAMBIAMI-GH: aggiornare con l'URL reale una volta scelto l'account GitHub Pages.
-Sitemap: https://CAMBIAMI-GH.github.io/tinypaws-heaven/sitemap-index.xml
+Sitemap: https://keryxdesign.github.io/tinypaws-heaven/sitemap-index.xml

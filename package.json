@@ -10,7 +10,8 @@
     "dev": "astro dev --host",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "content:doc": "node scripts/generate-content-doc.cjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.1",
@@ -22,5 +23,8 @@
   },
   "overrides": {
     "vite": "^7"
+  },
+  "devDependencies": {
+    "docx": "^9.0.0"
   }
 }
